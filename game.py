@@ -1,23 +1,47 @@
 import random
 # Lista de palabras posibles
-words = ["python", "programación", "computadora", "código", "desarrollo",
+words = ["python", "programacion", "computadora", "código", "desarrollo",
 "inteligencia"]
-
-# Elegir una palabra al azar
-secret_word = random.choice(words)
-# Número máximo de fallos permitidos
-max_fails = 10
+def set_secret_word(difficulty):
+    # Elegir una palabra al azar
+    secret_word = random.choice(words)
+    if difficulty == "facil":
+        # Mostrar todas las vocales
+        vocales = "aeiou"
+        word_displayed ="".join([letter if letter in vocales else "_" for letter in secret_word])
+        guessed_letters.extend([letter for letter in word_displayed if letter != "_" and letter.isalpha()])
+    elif difficulty == "medio":
+        # Mostrar la primera y última letra
+        word_displayed = secret_word[0] + "_" * (len(secret_word) - 2) + secret_word[-1]
+        guessed_letters.extend([secret_word[0], secret_word[-1]])
+    elif difficulty == "dificil":
+         #No mostrar ninguna letra
+         word_displayed = "_" * len(secret_word)
+    return secret_word, word_displayed
+# Función para solicitar al usuario el nivel de dificultad
+def select_difficulty():
+    exit=True
+    while exit:
+        difficulty = input("Selecciona el nivel de dificultad (facil, medio, dificil): ").lower()
+        if difficulty in ["facil", "medio", "dificil"]:
+            exit=False
+            return difficulty
+        else:
+            print("Nivel de dificultad no válido. Por favor, selecciona entre facil, medio o dificil.")
+# Elegir el nivel de dificultad
+difficulty = select_difficulty()
 # Lista para almacenar las letras adivinadas
 guessed_letters = []
-
+# Establecer la palabra a adivinar según el nivel de dificultad
+secret_word, word_displayed = set_secret_word(difficulty)
+# Número máximo de fallos permitidos
+max_fails = 10
 print("¡Bienvenido al juego de adivinanzas!")
 print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
-
-word_displayed = "_" * len(secret_word)
 # Mostrarla palabra parcialmente adivinada
 print(f"Palabra: {word_displayed}")
 i=1
-while i <= max_fails:
+while i <= max_fails:   
      # Pedir al jugador que ingrese una letra
      letter = input("Ingresa una letra: ").lower()
      # Verificar si la letra ya ha sido adivinada
